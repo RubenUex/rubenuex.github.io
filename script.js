@@ -4,8 +4,10 @@ function myFunction() {
 
 
 let isDrawing = false
-let clientX = 0
-let clientY = 0
+let currentClientX = 0
+let currentClientY = 0
+let lastClientX = 0
+let lastClientY = 0
 
 function initCanvas() {
 	const canvas = document.getElementById("myCanvas")
@@ -20,38 +22,43 @@ function initCanvas() {
 	}
 	const canvasRect = canvas.getBoundingClientRect()
 	context.moveTo(0, 0)
+	let mouseDownID = -1
 	canvas.addEventListener("mousedown", (event) => {
-		isDrawing = true
-		doDrawing(event, canvas, context).then(() => console.log("Finished"))
+		mouseDownID = setInterval(() => {
+			draw(canvas, context)
+		}, 10);
 	});
 	canvas.addEventListener("mouseup", () => {
-		isDrawing = false
+		if (mouseDownID != -1) {
+			clearInterval(mouseDownID)
+			mouseDownID = -1
+		}
+	})
+	canvas.addEventListener("mouseleave", () => {
+		if (mouseDownID != -1) {
+			clearInterval(mouseDownID)
+			mouseDownID = -1
+		}
 	})
 
 }
 
-onmousemove = function(e){
-	clientX = e.clientX
-	clientY = e.clientY
+onmousemove = function (e) {
+	lastClientX = currentClientX
+	lastClientY = currentClientY
+	currentClientX = e.clientX
+	currentClientY = e.clientY
 }
 
-async function sleep(ms) {
-  await new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function doDrawing(event, canvas, context) {
-	while (isDrawing) {
-		draw(event, canvas, context)
-		await sleep(10)
-	}
-}
-
-function draw(event, canvas, context) {
+function draw(canvas, context) {
 	const canvasRect = canvas.getBoundingClientRect()
-	const canvasX = clientX - canvasRect.left
-	const canvasY = clientY - canvasRect.top	
-	context.fillRect(canvasX - 2, canvasY - 2, 4, 4)
-
+	const lastCanvasX = lastClientX - canvasRect.left
+	const lastCanvasY = lastClientY - canvasRect.top
+	const currentCanvasX = currentClientX - canvasRect.left
+	const currentCanvasY = currentClientY - canvasRect.top
+	context.moveTo(lastCanvasX, lastCanvasY)
+	context.lineTo(currentCanvasX, currentCanvasY)
+	context.stroke()
 }
 
 function init() {
