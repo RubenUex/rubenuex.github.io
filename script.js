@@ -24,8 +24,10 @@ function initCanvas() {
 	context.moveTo(0, 0)
 	let mouseDownID = -1
 	canvas.addEventListener("mousedown", (event) => {
+		lastClientX = currentClientX
+		lastClientY = currentClientY
 		mouseDownID = setInterval(() => {
-			draw(canvas, context)
+			draw(canvasRect.left, canvasRect.top, context)
 		}, 10);
 	});
 	canvas.addEventListener("mouseup", () => {
@@ -44,21 +46,20 @@ function initCanvas() {
 }
 
 onmousemove = function (e) {
-	lastClientX = currentClientX
-	lastClientY = currentClientY
 	currentClientX = e.clientX
 	currentClientY = e.clientY
 }
 
-function draw(canvas, context) {
-	const canvasRect = canvas.getBoundingClientRect()
-	const lastCanvasX = lastClientX - canvasRect.left
-	const lastCanvasY = lastClientY - canvasRect.top
-	const currentCanvasX = currentClientX - canvasRect.left
-	const currentCanvasY = currentClientY - canvasRect.top
+function draw(originX, originY, context) {
+	const lastCanvasX = lastClientX - originX
+	const lastCanvasY = lastClientY - originY
+	const currentCanvasX = currentClientX - originX
+	const currentCanvasY = currentClientY - originY
 	context.moveTo(lastCanvasX, lastCanvasY)
 	context.lineTo(currentCanvasX, currentCanvasY)
 	context.stroke()
+	lastClientX = currentClientX
+	lastClientY = currentClientY
 }
 
 function init() {
