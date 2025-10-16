@@ -1,13 +1,10 @@
-function myFunction() {
-	alert("Hello, world!")
-}
-
-
-let isDrawing = false
 let currentClientX = 0
 let currentClientY = 0
 let lastClientX = 0
 let lastClientY = 0
+let currentColor = "black"
+let currentBrushSize = 5
+let currentCompositeOperation = "source-over"
 
 function initCanvas() {
 	const canvas = document.getElementById("myCanvas")
@@ -55,15 +52,31 @@ function draw(originX, originY, context) {
 	const lastCanvasY = lastClientY - originY
 	const currentCanvasX = currentClientX - originX
 	const currentCanvasY = currentClientY - originY
+	context.beginPath()
 	context.moveTo(lastCanvasX, lastCanvasY)
 	context.lineTo(currentCanvasX, currentCanvasY)
+
+	context.strokeStyle = currentColor
+	context.lineWidth = currentBrushSize
+	context.globalCompositeOperation = currentCompositeOperation
+
 	context.stroke()
 	lastClientX = currentClientX
 	lastClientY = currentClientY
 }
 
-function init() {
-	window.onload = (() => initCanvas())
+function changeColor(newColor) {
+	currentColor = newColor
 }
 
-init()
+function getBackgroundColor() {
+	return getComputedStyle(canvas).background
+}
+
+function setOpaqueBrush() {
+	currentCompositeOperation = "source-over"
+}
+
+function setTransparentBrush() {
+	currentCompositeOperation = "destination-out"
+}

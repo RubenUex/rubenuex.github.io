@@ -8,14 +8,30 @@
 /* Body Styling */
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #74ebd5, #9face6); /* Gradient background */
+    background: linear-gradient(135deg, #74ebd5, #9face6);
     color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     text-align: center;
     padding: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.mainBody {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.buttonIcon {
+	background: #ccccb3;
+	padding: 0.5em;
+	border: 3px solid black;
+	margin-right: 1em;
+	border-radius: 20%;
 }
 
 /* Page Title */
